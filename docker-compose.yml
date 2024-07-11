@@ -1,0 +1,37 @@
+version: '3.4'
+
+services:
+  magnise_db:
+    container_name: magnise-test-db
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    ports:
+      - 1433:1433
+    environment:
+      - ACCEPT_EULA=Y
+      - MSSQL_SA_PASSWORD=ASDqwe123
+      - SA_PASSWORD=ASDqwe123
+      - MSSQL_PID=Express
+
+  magnise_test_task:
+    container_name: magnise-test-webapi
+    image: ${DOCKER_REGISTRY-}magnisetesttask
+    build:
+      context: .
+      dockerfile: Magnise_Test_Task/Dockerfile
+    ports:
+      - 5000:8080
+      - 5001:8081
+    depends_on:
+      - magnise_db
+    environment:
+      - ThirdPartyApi__BaseUrl=https://platform.fintacharts.com
+      - ThirdPartyApi__TokenUrl=https://platform.fintacharts.com/identity/realms/fintatech/protocol/openid-connect/token
+      - ThirdPartyApi__URI_WSS=wss://platform.fintacharts.com/api/streaming/ws/v1/realtime
+      - ThirdPartyApi__Username=r_test@fintatech.com
+      - ThirdPartyApi__Password=kisfiz-vUnvy9-sopnyv
+      - DB_SERVER=magnise_db
+      - DB_DATABASE=MarketDb
+      - DB_USER=sa
+      - DB_PASSWORD=ASDqwe123
+
+

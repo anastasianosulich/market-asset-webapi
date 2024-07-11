@@ -1,0 +1,6 @@
+@Magnise_Test_Task_HostAddress = http://localhost:5049
+
+GET {{Magnise_Test_Task_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
